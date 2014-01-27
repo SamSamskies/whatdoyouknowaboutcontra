@@ -10,15 +10,28 @@
         font-family: 'Press Start 2P', cursive;
         background: yellow;
       }
-      body.loading {
+      #mask {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
         background: black;
         color: white;
+        display: none;
       }
       #background, #background-bonus {
         position: fixed;
         z-index: -99;
         width: 100%;
         height: 100%;
+      }
+      #background {
+        left: -9999px;
+      }
+      #background.active {
+        left: 0;
+      }
+      #background-bonus {
         display: none;
       }
       iframe {
@@ -39,9 +52,6 @@
         color: red;
         text-align: center;
         margin-top: 100px;
-        display: none;
-      }
-      #loading {
         display: none;
       }
       #credits {
@@ -74,14 +84,19 @@
     </script>
   </head>
   <body>
+    <!-- Hack to fix weird issue with Chrome and background colors -->
+    <div id="mask">
+      <h1 id="loading">loading...</h1>
+    </div>
+
     <h1 id="keyboard-required">*keyboard required</h1>
     <h1 id="title">Whatchuknowabout Contra?</h1>
-    <h1 id="loading">loading...</h1>
     <div id="credits">
       <p>Site by: <a href="https://github.com/SamSamskies">Sam Samskies</a></p>
       <p>Cheat code by: <a href="https://github.com/theInternauts/Konami_Code">theInternauts</a></p>
     </div>
     <div id="background">
+      <iframe id="first-video" frameborder="0" src="https://www.youtube.com/embed/-UipnBcWYWw?controls=0&showinfo=0&autohide=1&enablejsapi=1"></iframe>
     </div>
     <div id="background-bonus">
     </div>
@@ -89,34 +104,48 @@
     <script type="text/javascript" src="jQuery_konami_code.js"></script>
     <script>
 
+      // This stuff needs to be global
+      var firstPlayer;
+      function onYouTubeIframeAPIReady() {
+        firstPlayer = new YT.Player($('#first-video')[0]);
+      }
+
       $(function() {
+
+        // This code loads the IFrame Player API code asynchronously.
+        function loadYouTubeAPIAsyc() {
+          var tag = document.createElement('script');
+          tag.src = "https://www.youtube.com/iframe_api";
+          var firstScriptTag = document.getElementsByTagName('script')[0];
+          firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        }
 
         function booyah() {
           prepAndPlayVideo();
           setTimeout(showVideo, 2000);
-          setTimeout(showBonusVideo, 13000);
+          setTimeout(showBonusVideo, 11000);
         }
 
         function prepAndPlayVideo() {
-          insertVideo();
-          $('body').addClass('loading');
+          firstPlayer.playVideo();
+          $('#mask').show();
           $('#title').hide();
           $('#loading').show();
         }
 
         function showVideo() {
-          $('#background').show();
-          $('#loading').hide();
+          $('#mask').hide();
+          $('#background').addClass('active');
         }
 
         function showBonusVideo() {
           insertBonusVideo();
           $('#background').hide();
-          $('#loading').show();
+          $('#mask').show();
 
           setTimeout(function() {
+            $('#mask').hide();
             $('#background-bonus').show();
-            $('#loading').hide();
           }, 2000);
           setTimeout(showCredits, 76000);
         }
@@ -135,6 +164,7 @@
           $('body').removeClass('loading');
         }
 
+        loadYouTubeAPIAsyc();
         $(document).konami_code({ callback: booyah });
 
         if (/Mobile|webOS|Android/.test(navigator.userAgent)) {
