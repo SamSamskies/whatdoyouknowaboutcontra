@@ -107,67 +107,74 @@
       // This stuff needs to be global
       var firstPlayer;
       function onYouTubeIframeAPIReady() {
-        firstPlayer = new YT.Player($('#first-video')[0]);
+        firstPlayer = new YT.Player($('#first-video')[0], {
+          events: {
+            'onStateChange': onPlayerStateChange
+          }
+        });
       }
 
-      $(function() {
-
-        // This code loads the IFrame Player API code asynchronously.
-        function loadYouTubeAPIAsyc() {
-          var tag = document.createElement('script');
-          tag.src = "https://www.youtube.com/iframe_api";
-          var firstScriptTag = document.getElementsByTagName('script')[0];
-          firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      function onPlayerStateChange(event) {
+        if (event.data == YT.PlayerState.PLAYING) {
+          showVideo();
         }
-
-        function booyah() {
-          prepAndPlayVideo();
-          setTimeout(showVideo, 2000);
-          setTimeout(showBonusVideo, 11000);
+        else if (event.data == YT.PlayerState.ENDED) {
+          showBonusVideo();
         }
+      }
 
-        function prepAndPlayVideo() {
-          firstPlayer.playVideo();
-          $('#mask').show();
-          $('#title').hide();
-          $('#loading').show();
-        }
+      // This code loads the IFrame Player API code asynchronously.
+      function loadYouTubeAPIAsyc() {
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      }
 
-        function showVideo() {
+      function booyah() {
+        prepAndPlayVideo();
+      }
+
+      function prepAndPlayVideo() {
+        firstPlayer.playVideo();
+        $('#mask').show();
+        $('#title').hide();
+        $('#loading').show();
+      }
+
+      function showVideo() {
+        $('#mask').hide();
+        $('#background').addClass('active');
+      }
+
+      function showBonusVideo() {
+        insertBonusVideo();
+        $('#background').hide();
+        $('#mask').show();
+
+        setTimeout(function() {
           $('#mask').hide();
-          $('#background').addClass('active');
-        }
+          $('#background-bonus').show();
+        }, 2000);
+        setTimeout(showCredits, 76000);
+      }
 
-        function showBonusVideo() {
-          insertBonusVideo();
-          $('#background').hide();
-          $('#mask').show();
+      function insertBonusVideo() {
+        $('#background-bonus').html('<iframe frameborder="0" src="https://www.youtube.com/embed/yZ15vCGuvH0?autoplay=1&controls=0&showinfo=0&autohide=1&vq=hd1080&enablejsapi=1"></iframe>');
+      }
 
-          setTimeout(function() {
-            $('#mask').hide();
-            $('#background-bonus').show();
-          }, 2000);
-          setTimeout(showCredits, 76000);
-        }
+      function showCredits() {
+        $('#background-bonus').hide();
+        $('#credits').show();
+        $('body').removeClass('loading');
+      }
 
-        function insertBonusVideo() {
-          $('#background-bonus').html('<iframe frameborder="0" src="https://www.youtube.com/embed/yZ15vCGuvH0?autoplay=1&controls=0&showinfo=0&autohide=1&vq=hd1080&enablejsapi=1"></iframe>');
-        }
+      loadYouTubeAPIAsyc();
+      $(document).konami_code({ callback: booyah });
 
-        function showCredits() {
-          $('#background-bonus').hide();
-          $('#credits').show();
-          $('body').removeClass('loading');
-        }
-
-        loadYouTubeAPIAsyc();
-        $(document).konami_code({ callback: booyah });
-
-        if (/Mobile|webOS|Android/.test(navigator.userAgent)) {
-          $('#keyboard-required').show();
-        }
-
-      }());
+      if (/Mobile|webOS|Android/.test(navigator.userAgent)) {
+        $('#keyboard-required').show();
+      }
 
     </script>
     <img id="hidden-img" src="contra.gif">
