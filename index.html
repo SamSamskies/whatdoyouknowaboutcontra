@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Whatchuknowabout Contra?</title>
+    <link href='http://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>
+    <style>
+      body {
+        margin: 0;
+        font-family: 'Press Start 2P', cursive;
+        background: yellow;
+      }
+      body.loading {
+        background: black;
+        color: white;
+      }
+      #background, #background-bonus {
+        position: fixed;
+        z-index: -99;
+        width: 100%;
+        height: 100%;
+        display: none;
+      }
+      iframe {
+        height: 100%;
+        width: 100%;
+      }
+      #title, #loading {
+        left: 0;
+        line-height: 200px;
+        margin: auto;
+        margin-top: -120px;
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        text-align: center;
+      }
+      #loading {
+        display: none;
+      }
+      #credits {
+        position: absolute;
+        height: 200px;
+        width: 600px;
+        margin-top: -100px;
+        top: 50%;
+        margin-left: -300px;
+        left: 50%;
+        text-align: center;
+        display: none;
+      }
+      #credits p {
+        line-height: 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 id="title">Whatchuknowabout Contra?</h1>
+    <h1 id="loading">loading...</h1>
+    <div id="credits">
+      <p>Site by: <a href="https://github.com/SamSamskies">Sam Samskies</a></p>
+      <p>Cheat code by: <a href="https://github.com/theInternauts/Konami_Code">theInternauts</a></p>
+    </div>
+    <div id="background">
+      <iframe frameborder="0"
+        src="https://www.youtube.com/embed/-UipnBcWYWw?controls=0&showinfo=0&autohide=1&enablejsapi=1">
+      </iframe>
+    </div>
+    <div id="background-bonus">
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript" src="jQuery_konami_code.js"></script>
+    <script>
+      var player;
+      var bonusPlayer;
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player($('iframe')[0])
+      }
+
+      $(function() {
+        // This code loads the IFrame Player API code asynchronously.
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        function booyah() {
+          player.playVideo();
+          $('body').addClass('loading');
+          $('#title').hide();
+          $('#loading').show();
+
+          setTimeout(showVideo, 2000);
+          setTimeout(showBonusVideo, 11000);
+        }
+
+        function showVideo() {
+          $('#background').show();
+          $('#loading').hide();
+        }
+
+        function showBonusVideo() {
+          insertBonusVideo();
+          $('#background').hide();
+          $('#loading').show();
+
+          setTimeout(function() {
+            $('#background-bonus').show();
+            $('#loading').hide();
+          }, 2000);
+          setTimeout(showCredits, 76000);
+        }
+
+        function insertBonusVideo() {
+          $('#background-bonus').html('<iframe frameborder="0" src="https://www.youtube.com/embed/yZ15vCGuvH0?autoplay=1&controls=0&showinfo=0&autohide=1&vq=hd1080&enablejsapi=1"></iframe>');
+        }
+
+        function showCredits() {
+          $('#background-bonus').hide();
+          $('#credits').show();
+          $('body').removeClass('loading');
+        }
+
+        $(document).konami_code({ callback: booyah });
+      }());
+    </script>
+  </body>
+</html>
