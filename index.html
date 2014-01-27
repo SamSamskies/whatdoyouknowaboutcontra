@@ -74,27 +74,32 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script type="text/javascript" src="jQuery_konami_code.js"></script>
     <script>
+      // This stuff needs to be global
       var player;
-      var bonusPlayer;
       function onYouTubeIframeAPIReady() {
         player = new YT.Player($('iframe')[0])
       }
 
       $(function() {
         // This code loads the IFrame Player API code asynchronously.
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        function loadYouTubeAPIAsyc() {
+          var tag = document.createElement('script');
+          tag.src = "https://www.youtube.com/iframe_api";
+          var firstScriptTag = document.getElementsByTagName('script')[0];
+          firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        }
 
         function booyah() {
+          prepAndPlayVideo();
+          setTimeout(showVideo, 2000);
+          setTimeout(showBonusVideo, 11000);
+        }
+
+        function prepAndPlayVideo() {
           player.playVideo();
           $('body').addClass('loading');
           $('#title').hide();
           $('#loading').show();
-
-          setTimeout(showVideo, 2000);
-          setTimeout(showBonusVideo, 11000);
         }
 
         function showVideo() {
@@ -124,6 +129,7 @@
           $('body').removeClass('loading');
         }
 
+        loadYouTubeAPIAsyc();
         $(document).konami_code({ callback: booyah });
       }());
     </script>
