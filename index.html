@@ -71,7 +71,7 @@
       #credits p {
         line-height: 50px;
       }
-      #hidden-img {
+      .hidden {
         display: none;
       }
     </style>
@@ -178,6 +178,11 @@
       }
 
     </script>
-    <img id="hidden-img" src="contra.gif">
+
+    <!-- This is here so that there is a thumbnail when sharing on Facebook -->
+    <img class="hidden" src="contra.gif">
+
+    <!-- Load bonus video so it's cached when user gets to it -->
+    <iframe class="hidden" frameborder="0" src="https://www.youtube.com/embed/yZ15vCGuvH0?vq=hd1080"></iframe>
   </body>
 </html>
