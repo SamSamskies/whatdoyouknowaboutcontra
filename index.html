@@ -35,6 +35,12 @@
         width: 100%;
         text-align: center;
       }
+      #keyboard-required {
+        color: red;
+        text-align: center;
+        margin-top: 100px;
+        display: none;
+      }
       #loading {
         display: none;
       }
@@ -58,6 +64,7 @@
     </style>
   </head>
   <body>
+    <h1 id="keyboard-required">*keyboard required</h1>
     <h1 id="title">Whatchuknowabout Contra?</h1>
     <h1 id="loading">loading...</h1>
     <div id="credits">
@@ -119,6 +126,10 @@
         }
 
         $(document).konami_code({ callback: booyah });
+
+        if (/Mobile|webOS|Android/.test(navigator.userAgent)) {
+          $('#keyboard-required').show();
+        }
 
       }());
 
