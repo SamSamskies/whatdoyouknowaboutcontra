@@ -10,6 +10,9 @@
         font-family: 'Press Start 2P', cursive;
         background: yellow;
       }
+      body.black {
+        background: black;
+      }
       #mask {
         position: fixed;
         width: 100%;
@@ -134,6 +137,7 @@
       function prepAndPlayVideo() {
         firstPlayer.playVideo();
         $('#mask').show();
+        $('body').addClass('black'); // Fix weird yellow flash after first video
         $('#title').hide();
         $('#loading').show();
       }
