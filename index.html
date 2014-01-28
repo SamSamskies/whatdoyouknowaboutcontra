@@ -109,6 +109,7 @@
 
       // This stuff needs to be global
       var firstPlayer;
+      var easterEggFound = false;
       function onYouTubeIframeAPIReady() {
         firstPlayer = new YT.Player($('#first-video')[0], {
           events: {
@@ -135,6 +136,9 @@
       }
 
       function prepAndPlayVideo() {
+        if (easterEggFound) { return; }
+
+        easterEggFound = true;
         firstPlayer.playVideo();
         $('#mask').show();
         $('body').addClass('black'); // Fix weird yellow flash after first video
